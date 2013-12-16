@@ -94,7 +94,7 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
       }
     })
     t.setDaemon(true)
-
+    t.start();
 
     config.port
   }
