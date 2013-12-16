@@ -40,7 +40,7 @@ object Build extends sbt.Build {
         publishMavenStyle := true,
         publishArtifact in Test := false,
         publishTo <<= version { v => releaseResolver(v) },
-        packageBin in Compile <<= (packageBin in Compile).dependsOn(copyFluentd),
+        compile in Compile <<= (compile in Compile).dependsOn(copyFluentd),
         copyFluentd := {
           val baseDir : File = baseDirectory.value
           val fluentd = baseDir / "fluentd"
