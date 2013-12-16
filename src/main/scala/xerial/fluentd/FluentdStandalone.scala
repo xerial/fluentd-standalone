@@ -41,9 +41,10 @@ object FluentdStandalone extends Logger {
 
 /**
  * Fluentd configuration
- * @param port
- * @param configFile
- * @param workDir
+ * @param port port number to listen
+ * @param configFile if null, the default configuration file is generated to (workdir)/fluent.conf
+ * @param workDir working directory. default is target/fluentd
+ * @param configuration fluentd configuration script used when configFile is null. The default configuration just outputs every log to stdout.
  */
 case class FluentdConfig(port:Int = IOUtil.randomPort,
                          configFile:String=null,
@@ -94,7 +95,7 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
       }
     })
     t.setDaemon(true)
-    t.start();
+    t.start()
 
     config.port
   }
@@ -102,7 +103,7 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
 
   def stop {
     fluentdProcess.map { p =>
-      info(s"Closing fluentd")
+      info(s"Terminating fluentd")
       p.destroy()
     }
   }
