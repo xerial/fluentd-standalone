@@ -26,7 +26,7 @@ object Build extends sbt.Build {
   lazy val root = Project(
     id = "fluentd-standalone",
     base = file("."),
-    settings = Defaults.defaultSettings ++ 
+    settings = Defaults.defaultSettings ++ sbtrelease.ReleasePlugin.releaseSettings ++
       Seq(
         organization := "org.xerial",
         organizationName := "xerial.org",
