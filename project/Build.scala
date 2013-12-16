@@ -3,6 +3,24 @@ import sbt.Keys._
 
 object Build extends sbt.Build {
 
+  private def profile = System.getProperty("xerial.profile", "default")
+
+  def releaseResolver(v: String): Option[Resolver] = {
+    profile match {
+      case "default" => {
+        val nexus = "https://oss.sonatype.org/"
+        if (v.trim.endsWith("SNAPSHOT"))
+          Some("snapshots" at nexus + "content/repositories/snapshots")
+        else
+          Some("releases" at nexus + "service/local/staging/deploy/maven2")
+      }
+      case p => {
+        scala.Console.err.println("unknown xerial.profile '%s'".format(p))
+        None
+      }
+    }
+  }
+
   val copyFluentd = TaskKey[Unit]("copy-fluentd", "Embed fluend into jar")
 
   lazy val root = Project(
@@ -10,10 +28,18 @@ object Build extends sbt.Build {
     base = file("."),
     settings = Defaults.defaultSettings ++ 
       Seq(
+        organization := "org.xerial",
+        organizationName := "xerial.org",
+        organizationHomepage := Some(new URL("http://github.com/xerial/fluentd-standalone")),
+        description := "Standalone fluend server for Java and Scala",
         scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
         // custom settings here
         scalaVersion := "2.10.3",
+
         crossPaths := false,
+        publishMavenStyle := true,
+        publishArtifact in Test := false,
+        publishTo <<= version { v => releaseResolver(v) },
         packageBin in Compile <<= (packageBin in Compile).dependsOn(copyFluentd),
         copyFluentd := {
           val baseDir : File = baseDirectory.value
@@ -36,6 +62,7 @@ object Build extends sbt.Build {
               }
           }
         },
+        logBuffered in Test := false,
         libraryDependencies ++= Seq(
           // Add dependent jars here
           "org.xerial" % "xerial-core" % "3.2.2",
