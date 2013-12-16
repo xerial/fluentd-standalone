@@ -57,16 +57,22 @@ case class FluentdConfig(port:Int = IOUtil.randomPort,
   else
     new File(configFile)
 
+
+  def fluentdCmd = s"${workDir}/core/bin/fluentd"
+  def fluentCatCmd = s"${workDir}/core/bin/fluent-cat"
+
 }
 
 
 
-class FluentdStandalone(config:FluentdConfig) extends Logger {
+class FluentdStandalone(val config:FluentdConfig) extends Logger {
 
   def this(port:Int) = this(FluentdConfig(port = port))
 
-
   private var fluentdProcess : Option[Process] = None
+
+
+  def port : Int = config.port
 
   /**
    * Start fluentd and returns fluentd port number
@@ -76,7 +82,7 @@ class FluentdStandalone(config:FluentdConfig) extends Logger {
     prepare(config)
 
     info(s"Launching fluentd")
-    val process = Shell.launchProcess(s"${config.workDir}/core/bin/fluentd -c ${config.getConfigFile}")
+    val process = Shell.launchProcess(s"${config.fluentdCmd} -c ${config.getConfigFile}")
     fluentdProcess = Some(process)
 
     config.port

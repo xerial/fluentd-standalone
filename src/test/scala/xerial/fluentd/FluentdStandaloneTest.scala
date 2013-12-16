@@ -7,6 +7,9 @@
 
 package xerial.fluentd
 
+import java.net.Socket
+import xerial.core.util.Shell
+
 
 /**
  * @author Taro L. Saito
@@ -19,8 +22,12 @@ class FluentdStandaloneTest extends MySpec {
 
       val fluentd = FluentdStandalone.start()
 
+      val port = fluentd.port
 
-      Thread.sleep(5000)
+      Thread.sleep(1000)
+      val catCommand = s"${fluentd.config.fluentCatCmd} -p ${port} debug"
+      Shell.exec("echo '{\"message\":\"hello\"}' | " + catCommand)
+      Thread.sleep(2000)
       fluentd.stop
     }
 
