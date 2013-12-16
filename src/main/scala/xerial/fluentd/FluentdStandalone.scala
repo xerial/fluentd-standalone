@@ -84,6 +84,17 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
     info(s"Launching fluentd")
     val process = Shell.launchProcess(s"${config.fluentdCmd} -c ${config.getConfigFile}")
     fluentdProcess = Some(process)
+    val t = new Thread(new Runnable {
+      def run() {
+        process.waitFor()
+        val ret = process.exitValue
+        if(ret != 0) {
+          error(s"Error occured while launching fluentd (error code:$ret). If you see 'LoadError', install fluentd and its dependencies by 'gem install fluentd'")
+        }
+      }
+    })
+    t.setDaemon(true)
+
 
     config.port
   }
