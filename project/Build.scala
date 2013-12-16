@@ -23,6 +23,8 @@ object Build extends sbt.Build {
 
   val copyFluentd = TaskKey[Unit]("copy-fluentd", "Embed fluend into jar")
 
+  val SCALA_VERSION = "2.10.3"
+
   lazy val root = Project(
     id = "fluentd-standalone",
     base = file("."),
@@ -34,8 +36,7 @@ object Build extends sbt.Build {
         description := "Standalone fluend server for Java and Scala",
         scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
         // custom settings here
-        scalaVersion := "2.10.3",
-
+        scalaVersion := SCALA_VERSION,
         crossPaths := false,
         publishMavenStyle := true,
         publishArtifact in Test := false,
@@ -69,7 +70,33 @@ object Build extends sbt.Build {
           "org.fusesource.scalate" % "scalate-core_2.10" % "1.6.1",
           "org.slf4j" % "slf4j-simple" % "1.7.5" % "test",
           "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
-        )
+        ),
+        pomExtra := {
+          <url>http://xerial.org/</url>
+            <licenses>
+              <license>
+                <name>Apache 2</name>
+                <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+              </license>
+            </licenses>
+            <scm>
+              <connection>scm:git:github.com/xerial/fluentd-standalone.git</connection>
+              <developerConnection>scm:git:git@github.com:xerial/fluentd-standalone.git</developerConnection>
+              <url>github.com/xerial/silk.git</url>
+            </scm>
+            <properties>
+              <scala.version>{SCALA_VERSION}</scala.version>
+              <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            </properties>
+            <developers>
+              <developer>
+                <id>xerial</id>
+                <name>Taro L. Saito</name>
+                <url>http://xerial.org/leo</url>
+              </developer>
+            </developers>
+        }
+
       )
   )
 }
