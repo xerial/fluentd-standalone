@@ -74,3 +74,5 @@ For using Travis CI (http://travis-ci.org), add the following settings to instal
 ```
 before_install: gem install fluentd
 ```
+
+ * [Scala API](https://oss.sonatype.org/service/local/repositories/releases/archive/org/xerial/fluentd-standalone/0.1/fluentd-standalone-0.1-javadoc.jar/!/index.html#xerial.fluentd.FluentdStandalone$)
