@@ -7,7 +7,6 @@
 
 package xerial.fluentd
 
-import xerial.fluentd.MySpec
 
 /**
  * @author Taro L. Saito
@@ -18,8 +17,11 @@ class FluentdStandaloneTest extends MySpec {
 
     "launch fluentd" in {
 
-      FluentdStandalone.start();
+      val fluentd = FluentdStandalone.start()
 
+
+      Thread.sleep(5000)
+      fluentd.stop
     }
 
 
