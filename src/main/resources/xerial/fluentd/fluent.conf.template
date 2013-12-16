@@ -1,0 +1,12 @@
+## Listen a socket
+<source>
+  type forward
+  port {{port}}
+</source>
+
+## Forward all log messages to stderr
+<match **>
+  type stderr
+</match>
+
+{{configuration}}
