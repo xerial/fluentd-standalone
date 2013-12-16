@@ -9,15 +9,36 @@ Use cases:
   * Running test codes that use fluentd (logger) in a build server (e.g., Travis CI, Jenkins, etc.), in which fluentd is not running.
   
 
-== Usage (Java/Scala)
+## Usage (Java/Scala)
 
-fluentd depends on some ruby modules. You need to install these dependencies.
+fluentd depends on some ruby modules. You need to install these dependencies first.
 
-The simplest way is install fluentd:
+The simplest way is just install fluentd.
 ```
 $ gem install fluentd
 ```
 
+See also http://docs.fluentd.org/articles/quickstart.
+
+### Maven
+```xml
+<dependencies>
+  ...
+  <dependency>
+    <groupId>org.xerial</groupId>
+    <artifactId>fluentd-standalone</artifactId>
+    <version>0.1</version>
+  </dependency>
+  ...
+</dependencies>
+```
+
+### sbt
+```
+libraryDependencies += "org.xerial" % "fluentd-standalone" % "0.1"
+```
+
+## Sample code
 
 ```java
 import xerial.fluentd.FluentdStandalone;
@@ -34,7 +55,7 @@ s.stop();
 ```
 
 
-== For developers
+## For developers
 
 ```
 $ git clone https://github.com/xerial/fluentd-standalone.git
