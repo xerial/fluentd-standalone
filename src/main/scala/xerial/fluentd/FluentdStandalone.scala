@@ -89,7 +89,7 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
         process.waitFor()
         val ret = process.exitValue
         if(ret != 0) {
-          error(s"Error occured while launching fluentd (error code:$ret). If you see 'LoadError', install fluentd and its dependencies by 'gem install fluentd'")
+          error(s"Error occurred while launching fluentd (error code:$ret). If you see 'LoadError', install fluentd and its dependencies by 'gem install fluentd'")
         }
       }
     })
