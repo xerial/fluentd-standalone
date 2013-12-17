@@ -12,12 +12,9 @@ import java.io._
 import xerial.core.log.Logger
 
 import xerial.core.io.Path._
-import org.fusesource.scalate.TemplateEngine
 import xerial.core.util.Shell
 import xerial.core.io.Resource.VirtualFile
 import java.net.Socket
-import org.slf4j.LoggerFactory
-import org.fusesource.scalate.util.ClassPathBuilder
 
 /**
  * @author Taro L. Saito
