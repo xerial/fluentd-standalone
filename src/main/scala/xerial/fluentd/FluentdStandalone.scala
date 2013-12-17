@@ -48,6 +48,8 @@ object FluentdStandalone extends Logger {
  */
 case class FluentdConfig(port:Int = IOUtil.randomPort,
                          configFile:String=null,
+                         initialWaitMilliSeconds:Int = 500,
+                         maxWaitMilliSeconds:Int = 10000,
                          workDir:String = "target/fluentd",
                          configuration : String = FluentdStandalone.defaultConfig) {
 
@@ -111,11 +113,11 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
     val port = start
 
     // Wait until fluentd starts
-    val maxTrial = 3
+    var waitDuration = config.initialWaitMilliSeconds
     var count = 0
     var connected = false
-    while(!connected && count < maxTrial) {
-      Thread.sleep(500)
+    while(!connected && waitDuration < config.maxWaitMilliSeconds) {
+      Thread.sleep(waitDuration)
       try {
         val sock = new Socket("localhost", port)
         sock.close()
@@ -123,9 +125,10 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
       }
       catch {
         case e:IOException =>
-          warn(e.getMessage)
+          warn(s"${e.getMessage}")
+          waitDuration = (waitDuration * 1.5).toInt
+          count += 1
       }
-      count += 1
     }
 
     if(!connected)

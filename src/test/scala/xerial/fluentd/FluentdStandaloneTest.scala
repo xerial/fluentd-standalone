@@ -26,7 +26,7 @@ class FluentdStandaloneTest extends MySpec {
         val port = fluentd.port
         val catCommand = s"${fluentd.config.fluentCatCmd} -p ${port} debug"
         val ret = Shell.exec("echo '{\"message\":\"hello\"}' | " + catCommand)
-        Thread.sleep(2000)
+        Thread.sleep(1000)
         ret shouldBe (0)
       }
       finally {
