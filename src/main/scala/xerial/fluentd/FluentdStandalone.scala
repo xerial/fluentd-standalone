@@ -15,6 +15,9 @@ import xerial.core.io.Path._
 import org.fusesource.scalate.TemplateEngine
 import xerial.core.util.Shell
 import xerial.core.io.Resource.VirtualFile
+import java.net.Socket
+import org.slf4j.LoggerFactory
+import org.fusesource.scalate.util.ClassPathBuilder
 
 /**
  * @author Taro L. Saito
@@ -23,7 +26,7 @@ object FluentdStandalone extends Logger {
 
   def start(config:FluentdConfig = FluentdConfig()) : FluentdStandalone = {
     val fd = new FluentdStandalone(config)
-    fd.start
+    fd.startAndAwait
     fd
   }
 
@@ -82,15 +85,18 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
   def start : Int = {
     prepare(config)
 
-    info(s"Launching fluentd")
+    info(s"Starting fluentd")
     val process = Shell.launchProcess(s"${config.fluentdCmd} -c ${config.getConfigFile}")
     fluentdProcess = Some(process)
     val t = new Thread(new Runnable {
       def run() {
         process.waitFor()
         val ret = process.exitValue
-        if(ret != 0) {
-          error(s"Error occurred while launching fluentd (error code:$ret). If you see 'LoadError', install fluentd and its dependencies by 'gem install fluentd'")
+        ret match {
+          case 0 => // OK
+          case 143 => // terminated by stop() (SIGTERM)
+          case code =>
+            error(s"Error occurred while launching fluentd (error code:$code). If you see 'LoadError', install fluentd and its dependencies by 'gem install fluentd'")
         }
       }
     })
@@ -98,6 +104,37 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
     t.start()
 
     config.port
+  }
+
+  /**
+   * Start fluentd and await its startup
+   * @return fluentd port number
+   */
+  def startAndAwait : Int = {
+    val port = start
+
+    // Wait until fluentd starts
+    val maxTrial = 3
+    var count = 0
+    var connected = false
+    while(!connected && count < maxTrial) {
+      Thread.sleep(500)
+      try {
+        val sock = new Socket("localhost", port)
+        sock.close()
+        connected = true
+      }
+      catch {
+        case e:IOException =>
+          warn(e.getMessage)
+      }
+      count += 1
+    }
+
+    if(!connected)
+      throw new IOException("Failed to connect fluentd")
+
+    port
   }
 
 
