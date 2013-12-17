@@ -188,13 +188,22 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
       }
     }
 
+    def fluentConf(port:Int, configuration:String) =
+      s"""
+        |## Listen a socket
+        |<source>
+        |  type forward
+        |  port ${port}
+        |</source>
+        |
+        |${configuration}
+      """.stripMargin
+
     // Create fluent.conf if it doesn't specified
     if(config.configFile == null) {
       val targetFile = config.getConfigFile
       // Create fluent.conf from a template
-      val prop = Map[String, Any]("port" -> config.port.toString, "configuration" -> config.configuration)
-      val engine = new TemplateEngine
-      val configText = engine.layout("/xerial/fluentd/fluent.conf.mustache", prop)
+      val configText = fluentConf(config.port, config.configuration)
       // Write fluent.conf
       IOUtil.withResource(new FileWriter(targetFile)) { writer =>
         writer.write(configText)

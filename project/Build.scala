@@ -67,7 +67,6 @@ object Build extends sbt.Build {
         libraryDependencies ++= Seq(
           // Add dependent jars here
           "org.xerial" % "xerial-core" % "3.2.2",
-          "org.fusesource.scalate" % "scalate-core_2.10" % "1.6.1",
           "org.slf4j" % "slf4j-simple" % "1.7.5" % "test",
           "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
         ),
