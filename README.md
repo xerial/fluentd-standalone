@@ -27,7 +27,7 @@ See also http://docs.fluentd.org/articles/quickstart.
   <dependency>
     <groupId>org.xerial</groupId>
     <artifactId>fluentd-standalone</artifactId>
-    <version>0.1</version>
+    <version>0.1.2</version>
   </dependency>
   ...
 </dependencies>
@@ -35,7 +35,7 @@ See also http://docs.fluentd.org/articles/quickstart.
 
 ### sbt
 ```
-libraryDependencies += "org.xerial" % "fluentd-standalone" % "0.1"
+libraryDependencies += "org.xerial" % "fluentd-standalone" % "0.1.2"
 ```
 
 ## Sample code
@@ -75,4 +75,4 @@ For using Travis CI (http://travis-ci.org), add the following settings to instal
 before_install: gem install fluentd
 ```
 
- * [Scala API](https://oss.sonatype.org/service/local/repositories/releases/archive/org/xerial/fluentd-standalone/0.1/fluentd-standalone-0.1-javadoc.jar/!/index.html#xerial.fluentd.FluentdStandalone$)
+ * [Scala API](https://oss.sonatype.org/service/local/repositories/releases/archive/org/xerial/fluentd-standalone/0.1.2/fluentd-standalone-0.1.2-javadoc.jar/!/index.html#xerial.fluentd.FluentdStandalone$)
