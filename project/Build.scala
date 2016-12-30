@@ -46,11 +46,13 @@ object Build extends sbt.Build {
         copyFluentd := {
           val baseDir : File = baseDirectory.value
           val fluentd = baseDir / "fluentd"
-          val targetDir : File = target.value / "classes/xerial/fluentd/core"
-          val s = streams.value
-          def rpath(path:File) =  path.relativeTo(baseDir).getOrElse(path)
 
-          s.log.info("copy " + rpath(fluentd) + " to " + rpath(targetDir))
+          Seq("2.10", "2.11", "2.12").foreach { ScalaV =>
+            val targetDir : File = target.value / s"scala-$ScalaV" / "classes/xerial/fluentd/core"
+            val s = streams.value
+            def rpath(path:File) =  path.relativeTo(baseDir).getOrElse(path)
+
+            s.log.info("copy " + rpath(fluentd) + " to " + rpath(targetDir))
             val p = (fluentd ** "*")
             for(file <- p.get; relPath <- file.relativeTo(fluentd) if !relPath.getPath.startsWith(".git")) {
               val out = targetDir / relPath.getPath
@@ -62,6 +64,7 @@ object Build extends sbt.Build {
                 s.log.debug("copy " + rpath(file) + " to " + rpath(out))
                 IO.copyFile(file, out, preserveLastModified=true)
               }
+            }
           }
         },
         logBuffered in Test := false,
