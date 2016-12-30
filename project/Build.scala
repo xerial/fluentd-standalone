@@ -23,7 +23,7 @@ object Build extends sbt.Build {
 
   val copyFluentd = TaskKey[Unit]("copy-fluentd", "Embed fluend into jar")
 
-  val SCALA_VERSION = "2.10.3"
+  val SCALA_VERSION = "2.12.1"
 
   lazy val root = Project(
     id = "fluentd-standalone",
@@ -37,7 +37,8 @@ object Build extends sbt.Build {
         scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
         // custom settings here
         scalaVersion := SCALA_VERSION,
-        crossPaths := false,
+        crossScalaVersions := Seq("2.10.5", "2.11.8", SCALA_VERSION),
+        crossPaths := true,
         publishMavenStyle := true,
         publishArtifact in Test := false,
         publishTo <<= version { v => releaseResolver(v) },
@@ -66,9 +67,9 @@ object Build extends sbt.Build {
         logBuffered in Test := false,
         libraryDependencies ++= Seq(
           // Add dependent jars here
-          "org.xerial" % "xerial-core" % "3.2.2",
-          "org.slf4j" % "slf4j-simple" % "1.7.5" % "test",
-          "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
+          "org.xerial" %% "xerial-core" % "3.6.0",
+          "org.slf4j" % "slf4j-simple" % "1.7.22" % "test",
+          "org.scalatest" %% "scalatest" % "3.0.1" % "test"
         ),
         pomExtra := {
           <url>http://xerial.org/</url>
