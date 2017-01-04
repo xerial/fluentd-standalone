@@ -1,31 +1,8 @@
-import sbt._
-import sbt.Keys._
+val copyFluentd = TaskKey[Unit]("copy-fluentd", "Embed fluend into jar")
 
-object Build extends sbt.Build {
+val SCALA_VERSION = "2.12.1"
 
-  private def profile = System.getProperty("xerial.profile", "default")
-
-  def releaseResolver(v: String): Option[Resolver] = {
-    profile match {
-      case "default" => {
-        val nexus = "https://oss.sonatype.org/"
-        if (v.trim.endsWith("SNAPSHOT"))
-          Some("snapshots" at nexus + "content/repositories/snapshots")
-        else
-          Some("releases" at nexus + "service/local/staging/deploy/maven2")
-      }
-      case p => {
-        scala.Console.err.println("unknown xerial.profile '%s'".format(p))
-        None
-      }
-    }
-  }
-
-  val copyFluentd = TaskKey[Unit]("copy-fluentd", "Embed fluend into jar")
-
-  val SCALA_VERSION = "2.12.1"
-
-  lazy val root = Project(
+lazy val root = Project(
     id = "fluentd-standalone",
     base = file("."),
     settings = Defaults.defaultSettings ++ sbtrelease.ReleasePlugin.releaseSettings ++
@@ -102,4 +79,3 @@ object Build extends sbt.Build {
 
       )
   )
-}
