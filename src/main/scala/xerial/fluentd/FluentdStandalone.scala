@@ -9,8 +9,8 @@ package xerial.fluentd
 
 import xerial.core.io.{Resource, IOUtil}
 import java.io._
-import xerial.core.log.Logger
 
+import wvlet.log.LogSupport
 import xerial.core.io.Path._
 import xerial.core.util.Shell
 import xerial.core.io.Resource.VirtualFile
@@ -19,7 +19,7 @@ import java.net.Socket
 /**
  * @author Taro L. Saito
  */
-object FluentdStandalone extends Logger {
+object FluentdStandalone extends LogSupport {
 
   def start(config:FluentdConfig = FluentdConfig()) : FluentdStandalone = {
     val fd = new FluentdStandalone(config)
@@ -68,7 +68,7 @@ case class FluentdConfig(port:Int = IOUtil.randomPort,
 
 
 
-class FluentdStandalone(val config:FluentdConfig) extends Logger {
+class FluentdStandalone(val config:FluentdConfig) extends LogSupport {
 
   def this(port:Int) = this(FluentdConfig(port = port))
 
@@ -87,7 +87,7 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
     info(s"Starting fluentd")
     val process = Shell.launchProcess(s"${config.fluentdCmd} -c ${config.getConfigFile} --no-supervisor")
     fluentdProcess = Some(process)
-    val t = new Thread(new Runnable {
+    val t = new Thread(new Runnable with LogSupport {
       def run() {
         process.waitFor()
         val ret = process.exitValue
