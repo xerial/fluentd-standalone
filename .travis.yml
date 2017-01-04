@@ -4,12 +4,8 @@ scala:
 
 script: sbt ++$TRAVIS_SCALA_VERSION test -Dloglevel=debug
 
-before_install: gem install fluentd
+before_install:
+   - gem install fluentd
 
 jdk:
- - openjdk8
  - oraclejdk8
-
-branches:
-  only:
-    - develop
