@@ -3,11 +3,14 @@ scala:
   - 2.12.1
   - 2.11.8
 
+sudo: false
+
 script: sbt ++$TRAVIS_SCALA_VERSION test
 
 before_install:
-   - gem update --system 2.2.0
+   - rvm install 2.2.0
    # This is necessary to install fluentd dependencies
+   - rvm use 2.2.0
    - gem install fluentd -v 0.14.11
 
 jdk:
