@@ -1,8 +1,9 @@
 language: scala
 scala:
   - 2.12.1
+  - 2.11.8
 
-script: sbt ++$TRAVIS_SCALA_VERSION test -Dloglevel=debug
+script: sbt ++$TRAVIS_SCALA_VERSION test
 
 before_install:
    - gem update --system 2.2.0
