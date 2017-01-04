@@ -1,15 +1,11 @@
 language: scala
 scala:
-  - 2.10.3
+  - 2.12.1
 
 script: sbt ++$TRAVIS_SCALA_VERSION test -Dloglevel=debug
 
-before_install: gem install fluentd
+before_install:
+   - gem install fluentd
 
 jdk:
- - openjdk7
- - oraclejdk7
-
-branches:
-  only:
-    - develop
+ - oraclejdk8
