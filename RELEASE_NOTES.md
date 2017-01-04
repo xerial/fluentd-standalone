@@ -1,8 +1,8 @@
 # Release Notes
 
-## 0.14.14
+## 0.14.11
 
- - Upgrade to fluentd 0.14.14
+ - Upgrade to fluentd 0.14.11
  - Scala 2.12, 2.11 support.
  - Dropped Scala 2.10 support
 
