@@ -85,7 +85,7 @@ class FluentdStandalone(val config:FluentdConfig) extends Logger {
     prepare(config)
 
     info(s"Starting fluentd")
-    val process = Shell.launchProcess(s"${config.fluentdCmd} -c ${config.getConfigFile}")
+    val process = Shell.launchProcess(s"${config.fluentdCmd} -c ${config.getConfigFile} --no-supervisor")
     fluentdProcess = Some(process)
     val t = new Thread(new Runnable {
       def run() {
