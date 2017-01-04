@@ -81,7 +81,7 @@ object Build extends sbt.Build {
             <scm>
               <connection>scm:git:github.com/xerial/fluentd-standalone.git</connection>
               <developerConnection>scm:git:git@github.com:xerial/fluentd-standalone.git</developerConnection>
-              <url>github.com/xerial/silk.git</url>
+              <url>github.com/xerial/fluentd-standalone.git</url>
             </scm>
             <properties>
               <scala.version>{SCALA_VERSION}</scala.version>
