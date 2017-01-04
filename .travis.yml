@@ -5,7 +5,9 @@ scala:
 script: sbt ++$TRAVIS_SCALA_VERSION test -Dloglevel=debug
 
 before_install:
-   - gem install fluentd
+   - gem update --system 2.2.0
+   # This is necessary to install fluentd dependencies
+   - gem install fluentd -v 0.14.11
 
 jdk:
  - oraclejdk8
