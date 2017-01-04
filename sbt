@@ -123,7 +123,7 @@ sbtjar_07_url () {
   echo "http://simple-build-tool.googlecode.com/files/sbt-launch-${1}.jar"
 }
 sbtjar_release_url () {
-  echo "http://typesafe.artifactoryonline.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/$sbt_version/sbt-launch.jar"
+  echo "https://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/$sbt_version/sbt-launch.jar"
 }
 sbtjar_snapshot_url () {
   local ver="$sbt_version"
@@ -187,7 +187,7 @@ download_url () {
 
   mkdir -p $(dirname "$jar") && {
     if which curl >/dev/null; then
-      curl --silent "$url" --output "$jar"
+      curl -L --silent "$url" --output "$jar"
     elif which wget >/dev/null; then
       wget --quiet -O "$jar" "$url"
     fi

@@ -23,7 +23,7 @@ object Build extends sbt.Build {
 
   val copyFluentd = TaskKey[Unit]("copy-fluentd", "Embed fluend into jar")
 
-  val SCALA_VERSION = "2.10.3"
+  val SCALA_VERSION = "2.12.1"
 
   lazy val root = Project(
     id = "fluentd-standalone",
@@ -37,7 +37,8 @@ object Build extends sbt.Build {
         scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
         // custom settings here
         scalaVersion := SCALA_VERSION,
-        crossPaths := false,
+        crossScalaVersions := Seq("2.10.5", "2.11.8", SCALA_VERSION),
+        crossPaths := true,
         publishMavenStyle := true,
         publishArtifact in Test := false,
         publishTo <<= version { v => releaseResolver(v) },
@@ -45,11 +46,13 @@ object Build extends sbt.Build {
         copyFluentd := {
           val baseDir : File = baseDirectory.value
           val fluentd = baseDir / "fluentd"
-          val targetDir : File = target.value / "classes/xerial/fluentd/core"
-          val s = streams.value
-          def rpath(path:File) =  path.relativeTo(baseDir).getOrElse(path)
 
-          s.log.info("copy " + rpath(fluentd) + " to " + rpath(targetDir))
+          Seq("2.10", "2.11", "2.12").foreach { ScalaV =>
+            val targetDir : File = target.value / s"scala-$ScalaV" / "classes/xerial/fluentd/core"
+            val s = streams.value
+            def rpath(path:File) =  path.relativeTo(baseDir).getOrElse(path)
+
+            s.log.info("copy " + rpath(fluentd) + " to " + rpath(targetDir))
             val p = (fluentd ** "*")
             for(file <- p.get; relPath <- file.relativeTo(fluentd) if !relPath.getPath.startsWith(".git")) {
               val out = targetDir / relPath.getPath
@@ -61,14 +64,15 @@ object Build extends sbt.Build {
                 s.log.debug("copy " + rpath(file) + " to " + rpath(out))
                 IO.copyFile(file, out, preserveLastModified=true)
               }
+            }
           }
         },
         logBuffered in Test := false,
         libraryDependencies ++= Seq(
           // Add dependent jars here
-          "org.xerial" % "xerial-core" % "3.2.2",
-          "org.slf4j" % "slf4j-simple" % "1.7.5" % "test",
-          "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
+          "org.xerial" %% "xerial-core" % "3.6.0",
+          "org.slf4j" % "slf4j-simple" % "1.7.22" % "test",
+          "org.scalatest" %% "scalatest" % "3.0.1" % "test"
         ),
         pomExtra := {
           <url>http://xerial.org/</url>

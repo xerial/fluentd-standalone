@@ -1,6 +1,5 @@
 package xerial.fluentd
 
-import org.scalatest.matchers.{ShouldMatchers, MustMatchers}
 import org.scalatest._
 import xerial.core.io.Resource
 import xerial.core.log.Logger
