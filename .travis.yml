@@ -11,7 +11,7 @@ before_install:
    - rvm install 2.2.0
    # This is necessary to install fluentd dependencies
    - rvm use 2.2.0
-   - gem install fluentd -v 0.14.11
+   - gem install fluentd -v 0.14.21
 
 jdk:
  - oraclejdk8
