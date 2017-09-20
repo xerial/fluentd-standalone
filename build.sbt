@@ -44,7 +44,7 @@ lazy val root = Project(
         logBuffered in Test := false,
         libraryDependencies ++= Seq(
           // Add dependent jars here
-          "org.wvlet" %% "airframe-log" % "0.22",
+          "org.wvlet" %% "airframe-log" % "0.21",
           "org.xerial" %% "xerial-core" % "3.6.0",
           "org.slf4j" % "slf4j-simple" % "1.7.22" % "test",
           "org.scalatest" %% "scalatest" % "3.0.1" % "test"
