@@ -5,8 +5,8 @@ val SCALA_VERSION = "2.12.1"
 
 lazy val root = Project(
     id = "fluentd-standalone",
-    base = file("."),
-    settings = Seq(
+    base = file("."))
+    .settings(
         organization := "org.xerial",
         organizationName := "xerial.org",
         organizationHomepage := Some(new URL("http://github.com/xerial/fluentd-standalone")),
@@ -44,7 +44,7 @@ lazy val root = Project(
         logBuffered in Test := false,
         libraryDependencies ++= Seq(
           // Add dependent jars here
-          "org.wvlet" %% "wvlet-log" % "1.1",
+          "org.wvlet" %% "airframe-log" % "0.22",
           "org.xerial" %% "xerial-core" % "3.6.0",
           "org.slf4j" % "slf4j-simple" % "1.7.22" % "test",
           "org.scalatest" %% "scalatest" % "3.0.1" % "test"
@@ -75,6 +75,12 @@ lazy val root = Project(
             </developers>
         },
         // Release settings
+	publishTo := Some(
+	  if (isSnapshot.value)
+	      Opts.resolver.sonatypeSnapshots
+	  else
+	      Opts.resolver.sonatypeStaging
+        ),
         releaseTagName := { (version in ThisBuild).value },
         releaseProcess := Seq[ReleaseStep](
           checkSnapshotDependencies,
@@ -84,12 +90,11 @@ lazy val root = Project(
           setReleaseVersion,
           commitReleaseVersion,
           tagRelease,
-          ReleaseStep(action = Command.process("publishSigned", _), enableCrossBuild = true),
+          releaseStepCommand("publishSigned"),
           setNextVersion,
           commitNextVersion,
-          ReleaseStep(action = Command.process("sonatypeReleaseAll", _), enableCrossBuild = true),
+          releaseStepCommand("sonatypeReleaseAll"),
           pushChanges
         ),
         releaseCrossBuild := true
       )
-  )
