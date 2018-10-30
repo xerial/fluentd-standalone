@@ -1,4 +1,4 @@
-fluentd-standalone
+fluentd-standalone [![Build Status](https://travis-ci.org/xerial/fluentd-standalone.svg?branch=develop)](https://travis-ci.org/xerial/fluentd-standalone) ![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.xerial/fluentd-standalone_2.12/badge.svg) [![Scaladoc](http://javadoc-badge.appspot.com/org.xerial/fluentd-standalone_2.12.svg?label=scaladoc)](http://javadoc-badge.appspot.com/org.xerial/fluentd-standalone_2.12)
 =========
 
 Standalone fluentd (http://fluentd.org) server for Java and Scala.
@@ -15,7 +15,7 @@ fluentd depends on some ruby modules. You need to install these dependencies fir
 
 The simplest way is just install fluentd.
 ```
-$ gem install fluentd
+$ gem install fluentd -v 1.2.6
 ```
 
 See also http://docs.fluentd.org/articles/quickstart.
@@ -26,8 +26,8 @@ See also http://docs.fluentd.org/articles/quickstart.
   ...
   <dependency>
     <groupId>org.xerial</groupId>
-    <artifactId>fluentd-standalone</artifactId>
-    <version>0.1</version>
+    <artifactId>fluentd-standalone_2.12</artifactId>
+    <version>1.2.6</version>
   </dependency>
   ...
 </dependencies>
@@ -35,7 +35,7 @@ See also http://docs.fluentd.org/articles/quickstart.
 
 ### sbt
 ```
-libraryDependencies += "org.xerial" % "fluentd-standalone" % "0.1"
+libraryDependencies += "org.xerial" %% "fluentd-standalone" % "1.2.6"
 ```
 
 ## Sample code
@@ -64,15 +64,5 @@ $ git submodule init          # Only for the first time
 $ git submodule update        # Fetch fluentd 
 
 # Run tests
-$ ./sbt test -Dloglevel=debug
+$ ./sbt test 
 ```
-
-
-For using Travis CI (http://travis-ci.org), add the following settings to install ruby dependencies fluentd.
-
-.travis.yml
-```
-before_install: gem install fluentd
-```
-
- * [Scala API](https://oss.sonatype.org/service/local/repositories/releases/archive/org/xerial/fluentd-standalone/0.1/fluentd-standalone-0.1-javadoc.jar/!/index.html#xerial.fluentd.FluentdStandalone$)
