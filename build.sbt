@@ -1,7 +1,5 @@
-import ReleaseTransformations._
-
 val copyFluentd = taskKey[Unit]("Embed fluentd into jar")
-val SCALA_VERSION = "2.12.1"
+val SCALA_VERSION = "2.12.7"
 
 lazy val root = Project(
     id = "fluentd-standalone",
@@ -14,7 +12,7 @@ lazy val root = Project(
         scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
         // custom settings here
         scalaVersion := SCALA_VERSION,
-        crossScalaVersions := Seq("2.11.8", SCALA_VERSION),
+        crossScalaVersions := Seq("2.11.11", SCALA_VERSION, "2.13.0-M4"),
         crossPaths := true,
         publishMavenStyle := true,
         publishArtifact in Test := false,
@@ -44,10 +42,10 @@ lazy val root = Project(
         logBuffered in Test := false,
         libraryDependencies ++= Seq(
           // Add dependent jars here
-          "org.wvlet" %% "airframe-log" % "0.21",
+          "org.wvlet.airframe" %% "airframe-log" % "0.69",
           "org.xerial" %% "xerial-core" % "3.6.0",
           "org.slf4j" % "slf4j-simple" % "1.7.22" % "test",
-          "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+          "org.scalatest" %% "scalatest" % "3.0.6-SNAP1" % "test"
         ),
         pomExtra := {
           <url>http://xerial.org/</url>
@@ -75,26 +73,5 @@ lazy val root = Project(
             </developers>
         },
         // Release settings
-	publishTo := Some(
-	  if (isSnapshot.value)
-	      Opts.resolver.sonatypeSnapshots
-	  else
-	      Opts.resolver.sonatypeStaging
-        ),
-        releaseTagName := { (version in ThisBuild).value },
-        releaseProcess := Seq[ReleaseStep](
-          checkSnapshotDependencies,
-          inquireVersions,
-          runClean,
-          runTest,
-          setReleaseVersion,
-          commitReleaseVersion,
-          tagRelease,
-          releaseStepCommand("publishSigned"),
-          setNextVersion,
-          commitNextVersion,
-          releaseStepCommand("sonatypeReleaseAll"),
-          pushChanges
-        ),
-        releaseCrossBuild := true
+	publishTo := sonatypePublishTo.value
       )

@@ -7,14 +7,16 @@
 
 package xerial.fluentd
 
-import xerial.core.io.{Resource, IOUtil}
+import xerial.core.io.{IOUtil, Resource}
 import java.io._
 
 import wvlet.log.LogSupport
-import xerial.core.io.Path._
-import xerial.core.util.Shell
-import xerial.core.io.Resource.VirtualFile
 import java.net.Socket
+
+import xerial.core.io.Resource.VirtualFile
+import xerial.core.util.{OS, Shell}
+import xerial.core.util.Shell._
+import xerial.core.io.Path._
 
 /**
  * @author Taro L. Saito
