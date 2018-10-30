@@ -35,7 +35,7 @@ See also http://docs.fluentd.org/articles/quickstart.
 
 ### sbt
 ```
-libraryDependencies += "org.xerial" %% "fluentd-standalone" % "0.14.11"
+libraryDependencies += "org.xerial" %% "fluentd-standalone" % "1.2.6"
 ```
 
 ## Sample code

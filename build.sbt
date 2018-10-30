@@ -1,3 +1,5 @@
+import sbt.url
+
 val copyFluentd   = taskKey[Unit]("Embed fluentd into jar")
 val SCALA_VERSION = "2.12.7"
 
@@ -44,31 +46,17 @@ lazy val root = Project(id = "fluentd-standalone", base = file("."))
       "org.slf4j"          % "slf4j-simple"  % "1.7.22" % "test",
       "org.scalatest"      %% "scalatest"    % "3.0.6-SNAP1" % "test"
     ),
-    pomExtra := {
-      <url>http://xerial.org/</url>
-            <licenses>
-              <license>
-                <name>Apache 2</name>
-                <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-              </license>
-            </licenses>
-            <scm>
-              <connection>scm:git:github.com/xerial/fluentd-standalone.git</connection>
-              <developerConnection>scm:git:git@github.com:xerial/fluentd-standalone.git</developerConnection>
-              <url>github.com/xerial/fluentd-standalone.git</url>
-            </scm>
-            <properties>
-              <scala.version>{SCALA_VERSION}</scala.version>
-              <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-            </properties>
-            <developers>
-              <developer>
-                <id>xerial</id>
-                <name>Taro L. Saito</name>
-                <url>http://xerial.org/leo</url>
-              </developer>
-            </developers>
-    },
+    licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
+    homepage := Some(url("https://github.com/xerial/fluentd-standalone")),
+    scmInfo := Some(
+      ScmInfo(
+        browseUrl = url("https://github.com/xerial/fluentd-standalone"),
+        connection = "scm:git@github.com:xerial/fluentd-standalone.git"
+      )
+    ),
+    developers := List(
+      Developer(id = "leo", name = "Taro L. Saito", email = "leo@xerial.org", url = url("http://xerial.org/leo"))
+    ),
     // Release settings
     publishTo := sonatypePublishTo.value
   )
