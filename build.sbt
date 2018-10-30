@@ -1,3 +1,4 @@
+import sbt.Keys.resolvers
 import sbt.url
 
 val copyFluentd   = taskKey[Unit]("Embed fluentd into jar")
@@ -8,7 +9,7 @@ lazy val root = Project(id = "fluentd-standalone", base = file("."))
     organization := "org.xerial",
     organizationName := "xerial.org",
     organizationHomepage := Some(new URL("http://github.com/xerial/fluentd-standalone")),
-    description := "Standalone fluend server for Java and Scala",
+    description := "Standalone fluentd server for Java and Scala",
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     // custom settings here
     scalaVersion := SCALA_VERSION,
@@ -41,10 +42,10 @@ lazy val root = Project(id = "fluentd-standalone", base = file("."))
     logBuffered in Test := false,
     libraryDependencies ++= Seq(
       // Add dependent jars here
-      "org.wvlet.airframe" %% "airframe-log" % "0.69",
-      "org.xerial"         %% "xerial-core"  % "3.6.0",
-      "org.slf4j"          % "slf4j-simple"  % "1.7.22" % "test",
-      "org.scalatest"      %% "scalatest"    % "3.0.6-SNAP1" % "test"
+      "org.wvlet.airframe" %% "airframe-log"     % "0.70",
+      "org.wvlet.airframe" %% "airframe-control" % "0.70",
+      "org.slf4j"          % "slf4j-simple"      % "1.7.22" % "test",
+      "org.scalatest"      %% "scalatest"        % "3.0.6-SNAP1" % "test"
     ),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
     homepage := Some(url("https://github.com/xerial/fluentd-standalone")),
@@ -58,5 +59,9 @@ lazy val root = Project(id = "fluentd-standalone", base = file("."))
       Developer(id = "leo", name = "Taro L. Saito", email = "leo@xerial.org", url = url("http://xerial.org/leo"))
     ),
     // Release settings
-    publishTo := sonatypePublishTo.value
+    publishTo := sonatypePublishTo.value,
+    // Use sonatype resolvers
+    resolvers ++= Seq(
+      Resolver.sonatypeRepo("releases")
+    )
   )

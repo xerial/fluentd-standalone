@@ -7,16 +7,14 @@
 
 package xerial.fluentd
 
-import xerial.core.io.{IOUtil, Resource}
 import java.io._
 
 import wvlet.log.LogSupport
 import java.net.Socket
 
-import xerial.core.io.Resource.VirtualFile
-import xerial.core.util.{OS, Shell}
-import xerial.core.util.Shell._
-import xerial.core.io.Path._
+import wvlet.airframe.control.Shell
+import wvlet.log.io.Resource.VirtualFile
+import wvlet.log.io.{IOUtil, Resource}
 
 /**
   * @author Taro L. Saito
@@ -47,7 +45,7 @@ object FluentdStandalone extends LogSupport {
   * @param workDir working directory. default is target/fluentd
   * @param configuration fluentd configuration script used when configFile is null. The default configuration just outputs every log to stdout.
   */
-case class FluentdConfig(port: Int = IOUtil.randomPort,
+case class FluentdConfig(port: Int = IOUtil.unusedPort,
                          configFile: String = null,
                          initialWaitMilliSeconds: Int = 500,
                          maxWaitMilliSeconds: Int = 10000,
@@ -56,7 +54,7 @@ case class FluentdConfig(port: Int = IOUtil.randomPort,
 
   def getConfigFile: File =
     if (configFile == null) {
-      workDir / "fluent.conf"
+      new File(workDir, "fluent.conf")
     } else
       new File(configFile)
 
@@ -151,8 +149,8 @@ class FluentdStandalone(val config: FluentdConfig) extends LogSupport {
     // Create workdir
 
     val workDir   = new File(config.workDir)
-    val coreDir   = workDir / "core"
-    val pluginDir = workDir / "plugin"
+    val coreDir   = new File(workDir, "core")
+    val pluginDir = new File(workDir, "plugin")
     debug(s"Creating fluentd workdir: $workDir")
     mkdir(workDir)
     mkdir(coreDir)
@@ -163,7 +161,7 @@ class FluentdStandalone(val config: FluentdConfig) extends LogSupport {
 
       def relPath(f: VirtualFile) = f.logicalPath.replaceFirst("xerial/fluent/core/", "")
       val rpath                   = relPath(f)
-      val targetPath              = coreDir / rpath
+      val targetPath              = new File(coreDir, rpath)
 
       if (f.isDirectory)
         targetPath.mkdirs()
