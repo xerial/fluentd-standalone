@@ -19,17 +19,17 @@ import xerial.core.util.Shell._
 import xerial.core.io.Path._
 
 /**
- * @author Taro L. Saito
- */
+  * @author Taro L. Saito
+  */
 object FluentdStandalone extends LogSupport {
 
-  def start(config:FluentdConfig = FluentdConfig()) : FluentdStandalone = {
+  def start(config: FluentdConfig = FluentdConfig()): FluentdStandalone = {
     val fd = new FluentdStandalone(config)
     fd.startAndAwait
     fd
   }
 
-  def defaultConfig : String =
+  def defaultConfig: String =
     """
       |## Forward all log messages to stdout
       |<match **>
@@ -40,50 +40,44 @@ object FluentdStandalone extends LogSupport {
 
 }
 
-
 /**
- * Fluentd configuration
- * @param port port number to listen
- * @param configFile if null, the default configuration file is generated to (workdir)/fluent.conf
- * @param workDir working directory. default is target/fluentd
- * @param configuration fluentd configuration script used when configFile is null. The default configuration just outputs every log to stdout.
- */
-case class FluentdConfig(port:Int = IOUtil.randomPort,
-                         configFile:String=null,
-                         initialWaitMilliSeconds:Int = 500,
-                         maxWaitMilliSeconds:Int = 10000,
-                         workDir:String = "target/fluentd",
-                         configuration : String = FluentdStandalone.defaultConfig) {
+  * Fluentd configuration
+  * @param port port number to listen
+  * @param configFile if null, the default configuration file is generated to (workdir)/fluent.conf
+  * @param workDir working directory. default is target/fluentd
+  * @param configuration fluentd configuration script used when configFile is null. The default configuration just outputs every log to stdout.
+  */
+case class FluentdConfig(port: Int = IOUtil.randomPort,
+                         configFile: String = null,
+                         initialWaitMilliSeconds: Int = 500,
+                         maxWaitMilliSeconds: Int = 10000,
+                         workDir: String = "target/fluentd",
+                         configuration: String = FluentdStandalone.defaultConfig) {
 
+  def getConfigFile: File =
+    if (configFile == null) {
+      workDir / "fluent.conf"
+    } else
+      new File(configFile)
 
-  def getConfigFile : File = if(configFile == null) {
-    workDir / "fluent.conf"
-  }
-  else
-    new File(configFile)
-
-
-  def fluentdCmd = s"${workDir}/core/bin/fluentd"
+  def fluentdCmd   = s"${workDir}/core/bin/fluentd"
   def fluentCatCmd = s"${workDir}/core/bin/fluent-cat"
 
 }
 
+class FluentdStandalone(val config: FluentdConfig) extends LogSupport {
 
+  def this(port: Int) = this(FluentdConfig(port = port))
 
-class FluentdStandalone(val config:FluentdConfig) extends LogSupport {
+  private var fluentdProcess: Option[Process] = None
 
-  def this(port:Int) = this(FluentdConfig(port = port))
-
-  private var fluentdProcess : Option[Process] = None
-
-
-  def port : Int = config.port
+  def port: Int = config.port
 
   /**
-   * Start fluentd and returns fluentd port number
-   * @return
-   */
-  def start : Int = {
+    * Start fluentd and returns fluentd port number
+    * @return
+    */
+  def start: Int = {
     prepare(config)
 
     info(s"Starting fluentd")
@@ -94,10 +88,11 @@ class FluentdStandalone(val config:FluentdConfig) extends LogSupport {
         process.waitFor()
         val ret = process.exitValue
         ret match {
-          case 0 => // OK
+          case 0   => // OK
           case 143 => // terminated by stop() (SIGTERM)
           case code =>
-            error(s"Error occurred while launching fluentd (error code:$code). If you see 'LoadError', install fluentd and its dependencies by 'gem install fluentd'")
+            error(
+              s"Error occurred while launching fluentd (error code:$code). If you see 'LoadError', install fluentd and its dependencies by 'gem install fluentd'")
         }
       }
     })
@@ -108,37 +103,35 @@ class FluentdStandalone(val config:FluentdConfig) extends LogSupport {
   }
 
   /**
-   * Start fluentd and await its startup
-   * @return fluentd port number
-   */
-  def startAndAwait : Int = {
+    * Start fluentd and await its startup
+    * @return fluentd port number
+    */
+  def startAndAwait: Int = {
     val port = start
 
     // Wait until fluentd starts
     var waitDuration = config.initialWaitMilliSeconds
-    var count = 0
-    var connected = false
-    while(!connected && waitDuration < config.maxWaitMilliSeconds) {
+    var count        = 0
+    var connected    = false
+    while (!connected && waitDuration < config.maxWaitMilliSeconds) {
       Thread.sleep(waitDuration)
       try {
         val sock = new Socket("localhost", port)
         sock.close()
         connected = true
-      }
-      catch {
-        case e:IOException =>
+      } catch {
+        case e: IOException =>
           warn(s"${e.getMessage}")
           waitDuration = (waitDuration * 1.5).toInt
           count += 1
       }
     }
 
-    if(!connected)
+    if (!connected)
       throw new IOException("Failed to connect fluentd")
 
     port
   }
-
 
   def stop {
     fluentdProcess.map { p =>
@@ -147,19 +140,18 @@ class FluentdStandalone(val config:FluentdConfig) extends LogSupport {
     }
   }
 
+  private[fluentd] def prepare(config: FluentdConfig) = {
 
-  private[fluentd] def prepare(config:FluentdConfig) = {
-
-    def mkdir(path:File) {
+    def mkdir(path: File) {
       path.mkdirs()
-      if(!path.exists())
+      if (!path.exists())
         throw new IOException(s"Failed to create directory: ${path}")
     }
 
     // Create workdir
 
-    val workDir = new File(config.workDir)
-    val coreDir = workDir / "core"
+    val workDir   = new File(config.workDir)
+    val coreDir   = workDir / "core"
     val pluginDir = workDir / "plugin"
     debug(s"Creating fluentd workdir: $workDir")
     mkdir(workDir)
@@ -167,13 +159,13 @@ class FluentdStandalone(val config:FluentdConfig) extends LogSupport {
     mkdir(pluginDir)
 
     // Copy fluentd
-    for(f <- Resource.listResources("xerial.fluentd.core")) {
+    for (f <- Resource.listResources("xerial.fluentd.core")) {
 
-      def relPath(f:VirtualFile) = f.logicalPath.replaceFirst("xerial/fluent/core/", "")
-      val rpath = relPath(f)
-      val targetPath = coreDir / rpath
+      def relPath(f: VirtualFile) = f.logicalPath.replaceFirst("xerial/fluent/core/", "")
+      val rpath                   = relPath(f)
+      val targetPath              = coreDir / rpath
 
-      if(f.isDirectory)
+      if (f.isDirectory)
         targetPath.mkdirs()
       else {
         IOUtil.withResource(f.url.openStream) { r =>
@@ -183,14 +175,14 @@ class FluentdStandalone(val config:FluentdConfig) extends LogSupport {
               out.write(fileContents)
             }
 
-            if(rpath.startsWith("bin"))
+            if (rpath.startsWith("bin"))
               targetPath.setExecutable(true)
           }
         }
       }
     }
 
-    def fluentConf(port:Int, configuration:String) =
+    def fluentConf(port: Int, configuration: String) =
       s"""
         |## Listen a socket
         |<source>
@@ -202,7 +194,7 @@ class FluentdStandalone(val config:FluentdConfig) extends LogSupport {
       """.stripMargin
 
     // Create fluent.conf if it doesn't specified
-    if(config.configFile == null) {
+    if (config.configFile == null) {
       val targetFile = config.getConfigFile
       // Create fluent.conf from a template
       val configText = fluentConf(config.port, config.configuration)

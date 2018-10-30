@@ -15,7 +15,7 @@ fluentd depends on some ruby modules. You need to install these dependencies fir
 
 The simplest way is just install fluentd.
 ```
-$ gem install fluentd -v 0.14.11
+$ gem install fluentd -v 1.2.6
 ```
 
 See also http://docs.fluentd.org/articles/quickstart.
@@ -27,7 +27,7 @@ See also http://docs.fluentd.org/articles/quickstart.
   <dependency>
     <groupId>org.xerial</groupId>
     <artifactId>fluentd-standalone_2.12</artifactId>
-    <version>0.14.11</version>
+    <version>1.2.6</version>
   </dependency>
   ...
 </dependencies>
