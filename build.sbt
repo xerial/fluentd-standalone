@@ -13,7 +13,7 @@ lazy val root = Project(id = "fluentd-standalone", base = file("."))
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     // custom settings here
     scalaVersion := SCALA_VERSION,
-    crossScalaVersions := Seq("2.11.11", SCALA_VERSION, "2.13.0-M4"),
+    crossScalaVersions := Seq("2.11.11", SCALA_VERSION, "2.13.0-M5"),
     crossPaths := true,
     publishMavenStyle := true,
     publishArtifact in Test := false,
