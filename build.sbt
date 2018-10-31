@@ -45,7 +45,7 @@ lazy val root = Project(id = "fluentd-standalone", base = file("."))
       "org.wvlet.airframe" %% "airframe-log"     % "0.72",
       "org.wvlet.airframe" %% "airframe-control" % "0.72",
       "org.slf4j"          % "slf4j-simple"      % "1.7.22" % "test",
-      "org.scalatest"      %% "scalatest"        % "3.0.6-SNAP1" % "test"
+      "org.scalatest"      %% "scalatest"        % "3.0.6-SNAP4" % "test"
     ),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
     homepage := Some(url("https://github.com/xerial/fluentd-standalone")),
