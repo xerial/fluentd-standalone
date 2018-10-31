@@ -31,7 +31,7 @@ object FluentdStandalone extends LogSupport {
     """
       |## Forward all log messages to stdout
       |<match **>
-      |  type stdout
+      |  @type stdout
       |</match>
       |
     """.stripMargin
@@ -184,7 +184,7 @@ class FluentdStandalone(val config: FluentdConfig) extends LogSupport {
       s"""
         |## Listen a socket
         |<source>
-        |  type forward
+        |  @type forward
         |  port ${port}
         |</source>
         |
