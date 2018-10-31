@@ -42,8 +42,8 @@ lazy val root = Project(id = "fluentd-standalone", base = file("."))
     logBuffered in Test := false,
     libraryDependencies ++= Seq(
       // Add dependent jars here
-      "org.wvlet.airframe" %% "airframe-log"     % "0.70",
-      "org.wvlet.airframe" %% "airframe-control" % "0.70",
+      "org.wvlet.airframe" %% "airframe-log"     % "0.72",
+      "org.wvlet.airframe" %% "airframe-control" % "0.72",
       "org.slf4j"          % "slf4j-simple"      % "1.7.22" % "test",
       "org.scalatest"      %% "scalatest"        % "3.0.6-SNAP1" % "test"
     ),
