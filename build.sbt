@@ -2,7 +2,7 @@ import sbt.Keys.resolvers
 import sbt.url
 
 val copyFluentd   = taskKey[Unit]("Embed fluentd into jar")
-val SCALA_VERSION = "2.12.7"
+scalaVersion := "2.12.8"
 
 lazy val root = Project(id = "fluentd-standalone", base = file("."))
   .settings(
@@ -12,8 +12,7 @@ lazy val root = Project(id = "fluentd-standalone", base = file("."))
     description := "Standalone fluentd server for Java and Scala",
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     // custom settings here
-    scalaVersion := SCALA_VERSION,
-    crossScalaVersions := Seq("2.11.11", SCALA_VERSION, "2.13.0-M5"),
+    crossScalaVersions := Seq("2.11.11", scalaVersion.value, "2.13.0"),
     crossPaths := true,
     publishMavenStyle := true,
     publishArtifact in Test := false,
@@ -42,10 +41,10 @@ lazy val root = Project(id = "fluentd-standalone", base = file("."))
     logBuffered in Test := false,
     libraryDependencies ++= Seq(
       // Add dependent jars here
-      "org.wvlet.airframe" %% "airframe-log"     % "0.72",
-      "org.wvlet.airframe" %% "airframe-control" % "0.72",
-      "org.slf4j"          % "slf4j-simple"      % "1.7.22" % "test",
-      "org.scalatest"      %% "scalatest"        % "3.0.6-SNAP4" % "test"
+      "org.wvlet.airframe" %% "airframe-log"     % "19.7.5",
+      "org.wvlet.airframe" %% "airframe-control" % "19.7.5",
+      "org.slf4j"          % "slf4j-simple"      % "1.7.26" % "test",
+      "org.scalatest"      %% "scalatest"        % "3.0.8" % "test"
     ),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
     homepage := Some(url("https://github.com/xerial/fluentd-standalone")),

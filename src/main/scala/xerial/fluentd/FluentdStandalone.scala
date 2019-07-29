@@ -82,7 +82,7 @@ class FluentdStandalone(val config: FluentdConfig) extends LogSupport {
     val process = Shell.launchProcess(s"${config.fluentdCmd} -c ${config.getConfigFile} --no-supervisor")
     fluentdProcess = Some(process)
     val t = new Thread(new Runnable with LogSupport {
-      def run() {
+      def run() = {
         process.waitFor()
         val ret = process.exitValue
         ret match {
@@ -131,8 +131,8 @@ class FluentdStandalone(val config: FluentdConfig) extends LogSupport {
     port
   }
 
-  def stop {
-    fluentdProcess.map { p =>
+  def stop: Unit = {
+    fluentdProcess.foreach { p =>
       info(s"Terminating fluentd")
       p.destroy()
     }
@@ -140,7 +140,7 @@ class FluentdStandalone(val config: FluentdConfig) extends LogSupport {
 
   private[fluentd] def prepare(config: FluentdConfig) = {
 
-    def mkdir(path: File) {
+    def mkdir(path: File): Unit = {
       path.mkdirs()
       if (!path.exists())
         throw new IOException(s"Failed to create directory: ${path}")
