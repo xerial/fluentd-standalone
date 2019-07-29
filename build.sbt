@@ -2,7 +2,10 @@ import sbt.Keys.resolvers
 import sbt.url
 
 val copyFluentd   = taskKey[Unit]("Embed fluentd into jar")
-scalaVersion := "2.12.8"
+val SCALA_2_11 = "2.11.11"
+val SCALA_2_12 = "2.12.8"
+val SCALA_2_13 = "2.13.0"
+scalaVersion in ThisBuild := SCALA_2_12
 
 lazy val root = Project(id = "fluentd-standalone", base = file("."))
   .settings(
@@ -12,7 +15,7 @@ lazy val root = Project(id = "fluentd-standalone", base = file("."))
     description := "Standalone fluentd server for Java and Scala",
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     // custom settings here
-    crossScalaVersions := Seq("2.11.11", scalaVersion.value, "2.13.0"),
+    crossScalaVersions := Seq(SCALA_2_11, SCALA_2_12, SCALA_2_13),
     crossPaths := true,
     publishMavenStyle := true,
     publishArtifact in Test := false,
